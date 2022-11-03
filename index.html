@@ -59,7 +59,31 @@ document.getElementById("event1").addEventListener("click", function() {
   console.log("event1");
   logEvent("webViewEvent", { status: "click"});
 });
-  logEvent("scren_view",{firebase_screen: 'HomePage',firebase_screen_class: 'MainWeb''}
+    
+function logScreen(name, params) {
+  if (!name) {
+    return;
+  }
+
+  if (window.AnalyticsWebInterface) {
+    // Call Android interface
+    window.AnalyticsWebInterface.logScreen(name, JSON.stringify(params));
+  } else if (window.webkit
+      && window.webkit.messageHandlers
+      && window.webkit.messageHandlers.firebase) {
+    // Call iOS interface
+    var message = {
+      command: 'logEvent',
+      name: name,
+      parameters: params
+    };
+    window.webkit.messageHandlers.firebase.postMessage(message);
+  } else {
+    // No Android or iOS interface found
+    console.log("No native APIs found.");
+  }
+}
+  logEvent("scren_view",{FirebaseAnalytics.Param.SCREEN_NAME: 'HomePage',FirebaseAnalytics.Param.SCREEN_CLASS: 'MainWeb'}
     
   </script>
 </html>
