@@ -8,6 +8,30 @@
 
 </body>
   <script>
+  function logScreen(name, val1, val2) {
+  if (!name) {
+    return;
+  }
+
+  if (window.AnalyticsWebInterface) {
+    // Call Android interface
+    window.AnalyticsWebInterface.logScreen(name, val1, val2);
+  } else if (window.webkit
+      && window.webkit.messageHandlers
+      && window.webkit.messageHandlers.firebase) {
+    // Call iOS interface
+    var message = {
+      command: 'logEvent',
+      name: name,
+      parameters: params
+    };
+    window.webkit.messageHandlers.firebase.postMessage(message);
+  } else {
+    // No Android or iOS interface found
+    console.log("No native APIs found.");
+  }
+}
+    
   function logEvent(name, params) {
   if (!name) {
     return;
@@ -58,32 +82,7 @@ function setUserProperty(name, value) {
 document.getElementById("event1").addEventListener("click", function() {
   console.log("event1");
   logEvent("webViewEvent", { status: "click"});
+  logScreen("scren_view",'HomePage','MainWeb');
 });
-    
-function logScreen(name, val1, val2) {
-  if (!name) {
-    return;
-  }
-
-  if (window.AnalyticsWebInterface) {
-    // Call Android interface
-    window.AnalyticsWebInterface.logScreen(name, val1, val2);
-  } else if (window.webkit
-      && window.webkit.messageHandlers
-      && window.webkit.messageHandlers.firebase) {
-    // Call iOS interface
-    var message = {
-      command: 'logEvent',
-      name: name,
-      parameters: params
-    };
-    window.webkit.messageHandlers.firebase.postMessage(message);
-  } else {
-    // No Android or iOS interface found
-    console.log("No native APIs found.");
-  }
-}
-logScreen("scren_view",'HomePage','MainWeb');
-    
   </script>
 </html>
