@@ -1,47 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-42045RT02H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-42045RT02H');
-</script>
-  </head>
+</head>
 <body>
-
 <h1>Webview test</h1>
-<button type="button">Click Me!</button>
+<button type="button" id="event1">Click Me!</button>
 
 </body>
   <script type="module">
-  // Import the functions you need from the SDKs you need
+     // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
-  import { getAnalytics,logEvent } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-analytics.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-analytics.js";
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
-    apiKey: "AIzaSyDJit2lkVMnFt8AnaXjLce5BJ5HFDxf4XE",
-    authDomain: "github-pages-ca0af.firebaseapp.com",
-    projectId: "github-pages-ca0af",
-    storageBucket: "github-pages-ca0af.appspot.com",
-    messagingSenderId: "920738706270",
-    appId: "1:920738706270:web:aa3fd6cbd06601b29f95cf",
-    measurementId: "G-Z3GJQ92QKM"
+    apiKey: "AIzaSyBBT_AjIvHYWjSvIWbJohjs7OI1OU4mkiQ",
+    authDomain: "ga4migration.firebaseapp.com",
+    projectId: "ga4migration",
+    storageBucket: "ga4migration.appspot.com",
+    messagingSenderId: "35636868285",
+    appId: "1:35636868285:web:11e9edd0316255cc07f3d4",
+    measurementId: "G-ZB1G99CYLF"
   };
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
-  logEvent(analytics, 'screen_view', {
-      firebase_screen: 'HomePage', 
-      firebase_screen_class: 'MainPage'
-    });
-</script>
+  
+  function logEvent(name, params) {
+  if (!name) {
+    return;
+  }
+
+  if (window.AnalyticsWebInterface) {
+    // Call Android interface
+    window.AnalyticsWebInterface.logEvent(name, JSON.stringify(params));
+  } else if (window.webkit
+      && window.webkit.messageHandlers
+      && window.webkit.messageHandlers.firebase) {
+    // Call iOS interface
+    var message = {
+      command: 'logEvent',
+      name: name,
+      parameters: params
+    };
+    window.webkit.messageHandlers.firebase.postMessage(message);
+  } else {
+    // No Android or iOS interface found
+    console.log("No native APIs found.");
+  }
+}
+
+function setUserProperty(name, value) {
+  if (!name || !value) {
+    return;
+  }
+
+  if (window.AnalyticsWebInterface) {
+    // Call Android interface
+    window.AnalyticsWebInterface.setUserProperty(name, value);
+  } else if (window.webkit
+      && window.webkit.messageHandlers
+      && window.webkit.messageHandlers.firebase) {
+    // Call iOS interface
+    var message = {
+      command: 'setUserProperty',
+      name: name,
+      value: value
+   };
+    window.webkit.messageHandlers.firebase.postMessage(message);
+  } else {
+    // No Android or iOS interface found
+    console.log("No native APIs found.");
+  }
+}
+document.getElementById("event1").addEventListener("click", function() {
+  console.log("event1");
+  logEvent("webViewEvent", { status: "click"});
+});
+    
+  </script>
 </html>
