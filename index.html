@@ -60,14 +60,14 @@ document.getElementById("event1").addEventListener("click", function() {
   logEvent("webViewEvent", { status: "click"});
 });
     
-function logScreen(name, params) {
+function logScreen(name, val1, val2) {
   if (!name) {
     return;
   }
 
   if (window.AnalyticsWebInterface) {
     // Call Android interface
-    window.AnalyticsWebInterface.logScreen(name, JSON.stringify(params));
+    window.AnalyticsWebInterface.logScreen(name, val1, val2);
   } else if (window.webkit
       && window.webkit.messageHandlers
       && window.webkit.messageHandlers.firebase) {
@@ -83,7 +83,7 @@ function logScreen(name, params) {
     console.log("No native APIs found.");
   }
 }
-  logEvent("scren_view",{FirebaseAnalytics.Param.SCREEN_NAME: 'HomePage',FirebaseAnalytics.Param.SCREEN_CLASS: 'MainWeb'}
+  logEvent("scren_view",'HomePage','MainWeb'}
     
   </script>
 </html>
