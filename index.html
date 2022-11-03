@@ -14,6 +14,14 @@
 <body>
 
 <h1>Webview test</h1>
+  <script type="module">
+    import { getAnalytics, logEvent } from "firebase/analytics";
+    const analytics = getAnalytics();
+    logEvent(analytics, 'screen_view', {
+      firebase_screen: HomePage, 
+      firebase_screen_class: MainPage
+    });
+  </script>
 
 <button type="button">Click Me!</button>
 
